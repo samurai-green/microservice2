@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice2
+  template:
+    metadata:
+      labels:
+        app: microservice2
+    spec:
+      containers:
+      - name: microservice2
+        image: gcr.io/in-activity-2/container-2
+        ports:
+        - containerPort: 5001
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /sid_PV_dir
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: s8s-pvc

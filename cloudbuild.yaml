@@ -1,0 +1,26 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/in-activity-2/container-2', '.']
+    id: 'Build Docker Image'
+
+    # Push the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/in-activity-2/container-2']
+    id: 'Push Docker Image'
+
+    # Deploy the container image to GKE using gke-deploy
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - run
+      - --filename=config/
+      - --image=gcr.io/in-activity-2/container-2
+      - --location=us-central1-a
+      - --cluster=primary-cluster
+      -  --timeout=10m
+
+images:
+  - 'gcr.io/in-activity-2/container-2'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
